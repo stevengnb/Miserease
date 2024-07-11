@@ -9,7 +9,6 @@ export default function RegisterPage() {
     postedDate: new Date(),
     category: "Web Development",
     content: "This is a sample post about React Context.",
-    status: true,
     resolvedComment: "",
     emphatizeCount: 42,
   };
