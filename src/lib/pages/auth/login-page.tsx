@@ -4,7 +4,6 @@ import { FiLock } from "react-icons/fi";
 import { UserLogin } from "../../types/user-type";
 import { loginUser } from "../../services/user-service";
 import Loader from "../../../components/loader";
-import { FaLess } from "react-icons/fa";
 
 export default function LoginPage() {
   const [userData, setUserData] = useState<UserLogin>({
