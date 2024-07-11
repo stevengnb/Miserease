@@ -149,7 +149,7 @@ export const updateUser = async (user: UserUpdate) => {
     }
 }
 
-export const logoutUser = async (user: UserLogin) => {
+export const logoutUser = async () => {
 
     try {
         await signOut(auth);
@@ -161,7 +161,7 @@ export const logoutUser = async (user: UserLogin) => {
     } catch (err) {
         return {
             success: false,
-            message: "Logout failed."
+            message: "Logout failed"
         };
     }
 }
