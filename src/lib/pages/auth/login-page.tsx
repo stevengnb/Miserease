@@ -15,10 +15,15 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
     const response = await loginUser(userData);
+
     if (response.success) {
+      setLoading(false);
       navigate("/");
     }
+
+    setLoading(false);
     console.log(response.message);
   };
 
