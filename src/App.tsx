@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { router } from "./lib/routes/route";
 
+
 function App() {
   return (
     <BrowserRouter>
