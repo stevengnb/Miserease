@@ -1,4 +1,3 @@
-import React from "react";
 import PostCard from "../../../components/post-card";
 import { Post } from "../../types/post-type";
 

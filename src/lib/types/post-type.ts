@@ -5,7 +5,9 @@ export interface Post {
     postedDate?: Date;
     category?: string;
     content?: string;
-    status?: boolean;
+    resolved?: boolean;
     resolvedComment?: string | null;
     emphatizeCount?: number;
+    archived?: boolean;
+    banned?: boolean;
 }

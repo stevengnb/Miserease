@@ -13,7 +13,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    await loginUser(userData);
+    const response = await loginUser(userData);
+    console.log(response.message);
   };
 
   return (
@@ -54,7 +55,10 @@ export default function LoginPage() {
                 <Loader />
               </button>
             ) : (
-              <button className="bg-neutral rounded-3xl text-accent font-bold p-3 hover:bg-accent hover:text-neutral transition-all duration-300 ease-in-out active:scale-95">
+              <button
+                className="bg-neutral rounded-3xl text-accent font-bold p-3 hover:bg-accent hover:text-neutral transition-all duration-300 ease-in-out active:scale-95"
+                onClick={handleLogin}
+              >
                 Login
               </button>
             )}

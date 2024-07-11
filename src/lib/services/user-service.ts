@@ -1,4 +1,4 @@
-import { User, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { User, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase/firebase-config';
 import { UserLogin, UserRegister, UserUpdate } from "../types/user-type";
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
@@ -70,6 +70,8 @@ export const loginUser = async (user: UserLogin) => {
         };
     }
 }
+
+
 
 export const getUserById = async(uid? : string) => {
     if(!uid){
@@ -147,3 +149,19 @@ export const updateUser = async (user: UserUpdate) => {
     }
 }
 
+export const logoutUser = async () => {
+
+    try {
+        await signOut(auth);
+
+        return {
+            success: true,
+            message: "Logout success"
+        };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Logout failed"
+        };
+    }
+}
