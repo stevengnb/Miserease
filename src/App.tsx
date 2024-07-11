@@ -3,6 +3,8 @@ import "./App.css";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { router } from "./lib/routes/route";
+import { Post } from "./lib/types/post-type";
+import { addPost } from "./lib/services/post-service";
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
   );
 }
 
-function RouterComponent() {
+async function RouterComponent() {
   const location = useLocation();
 
   useEffect(() => {

@@ -1,11 +1,11 @@
 export interface Post {
     postID?: String;
-    publisherID?: String;
+    posterID?: String;
     title?: String;
     postedDate?: Date;
     category?: String;
     content?: String;
     status?: Boolean;
-    resolveComment?: String;
+    resolvedComment?: String | null;
     emphatizeCount?: number;
 }
