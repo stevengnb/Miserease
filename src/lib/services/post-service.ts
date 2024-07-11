@@ -1,4 +1,4 @@
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase-config";
 import { Post } from "../types/post-type";
 
@@ -77,9 +77,19 @@ export const addPost = async (post: Post) => {
 
     // add post to database
     try {
-        await addDoc(collection(db, "posts"), {
+        const addedPost = await addDoc(collection(db, "posts"), {
             ...excludedPost,
         });
+
+        const response = await addOwnedPost(addedPost.id)
+
+        if(!response?.success){
+            return {
+                success: false,
+                message: "Post added successfully!",
+            };
+        }
+
         return {
             success: true,
             message: "Post added successfully!",
@@ -91,6 +101,35 @@ export const addPost = async (post: Post) => {
         };
     }
 };
+
+export const addOwnedPost = async(postID: string) => {
+    const user = auth.currentUser;
+    if (!user) {
+        return {
+            success: false,
+            message: "User not found",
+        };
+    }
+
+    const docRef = doc(db, "users", user.uid);
+    try {
+        await updateDoc(docRef, {
+            ownedPost: arrayUnion(...postID)
+        });
+
+        return {
+            success: true,
+            message: "Success user posted",
+        };
+        
+    } catch (error){
+        return {
+            success: false,
+            message: "Error adding post to user",
+        };
+    }
+
+}
 
 export const resolvePost = async (postID: string, resolvedComment: string) => {
     // validate resolvedComment
@@ -133,6 +172,7 @@ export const resolvePost = async (postID: string, resolvedComment: string) => {
     }
 }
 
+// blm tentu fixed
 export const reportPost = async (postID: string, reason: string) => {
     // get the document reference
     const postRef = doc(db, "posts", postID);
@@ -168,9 +208,8 @@ export const reportPost = async (postID: string, reason: string) => {
                     message: 'Post is already marked as solved.',
                 };
             } else {
-                // Update reason array using arrayUnion to add new reason(s)
                 await updateDoc(reportedPostDoc.ref, {
-                    reason: arrayUnion(...reason), // Assuming `reason` is an array of strings
+                    reason: arrayUnion(...reason),
                 });
 
                 return {
@@ -181,7 +220,7 @@ export const reportPost = async (postID: string, reason: string) => {
         }
 
         // add new reportedPost doc
-        await addDoc(reportedPostsRef, {
+        await addDoc(collection(db, "reportedPosts") , {
             reportedPost: postID,
             reason: reason, // Initial reason array
             reportedAt: new Date(),
@@ -200,4 +239,71 @@ export const reportPost = async (postID: string, reason: string) => {
         };
     }
 
+}
+
+export const getAllPost = async (): Promise<Post[] | { success: false; message: string }> => {
+    const postsCollection = collection(db, 'posts');
+    const q = query(postsCollection, orderBy('postedDate', 'desc'));
+
+    try {
+        const querySnapshot = await getDocs(q);
+
+        const posts: Post[] = querySnapshot.docs.map(doc => ({
+            postID: doc.id,
+            ...doc.data(),
+            postedDate: doc.data().postedDate.toDate()
+        })) as Post[];
+
+        return posts;
+    } catch (error) {
+        return {
+            success: false,
+            message: "Error fetching posts",
+        };
+    }
+};
+
+export const getOwnedPost = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+        return {
+            success: false,
+            message: "User not found",
+        };
+    }
+
+    const docRef = doc(db, "users", user.uid);
+    try {
+        const docSnap = await getDoc(docRef);
+
+        if(!docSnap.exists){
+            return {
+                success: false,
+                message: "Error fetching user",
+            };
+        }
+
+        const ownedPostID: string[] = docSnap.data()?.ownedPost || [];
+        const posts: Post[] = [];
+
+        for (const postID of ownedPostID) {
+            const postDocRef = doc(db, 'posts', postID);
+            const postDoc = await getDoc(postDocRef);
+
+            if (postDoc.exists()) {
+                const postData = postDoc.data() as Post;
+                postData.postID = postDoc.id;
+                posts.push(postData);
+            } else {
+                console.warn(`Post with ID ${postID} not found`);
+            }
+        }
+
+        return posts
+    } catch (error){
+        return {
+            success: false,
+            message: "Error fetching posts",
+        };
+    }
 }

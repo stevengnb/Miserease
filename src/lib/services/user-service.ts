@@ -150,7 +150,6 @@ export const updateUser = async (user: UserUpdate) => {
 }
 
 export const logoutUser = async () => {
-
     try {
         await signOut(auth);
 
