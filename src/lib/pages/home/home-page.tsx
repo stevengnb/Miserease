@@ -3,8 +3,8 @@ import MainLayout from "../layout/main-layout";
 const HomePage = () => {
     return (
         <MainLayout>
-            <div>
-                
+            <div className="text-2xl">
+                Home Page
             </div>
         </MainLayout>
     )
