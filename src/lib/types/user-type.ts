@@ -1,11 +1,24 @@
 export interface User {
-    uid: string;
-    email: string;
-    gender: string;
-    role: string;
+    email?: string;
+    age?: number;
+    gender?: string;
+    role?: string;
+}
+
+export interface UserUpdate {
+    uid?: string
+    age?: number;
+    gender?: string;
 }
 
 export interface UserRegister {
-    email: string;
-    gender: string;
+    password?: string;
+    email?: string;
+    age?: number;
+    gender?: string;
+}
+
+export interface UserLogin {
+    password?: string;
+    email?: string;
 }
