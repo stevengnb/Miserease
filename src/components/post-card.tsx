@@ -18,8 +18,8 @@ export default function PostCard({ post }: { post: Post }) {
     <div
       className={
         post.resolved
-          ? "rounded-xl border-4 bg-accent  shadow-lg p-4 hover:cursor-pointer"
-          : "rounded-xl bg-neutral shadow-lg p-4 hover:cursor-pointer"
+          ? "rounded-xl border-4 bg-accent  shadow-lg p-4 hover:cursor-pointer hover:scale-105 transition-all duration-200"
+          : "rounded-xl bg-neutral shadow-lg p-4 hover:cursor-pointer hover:scale-105 transition-all duration-200"
       }
       onClick={() => handleDetailNavigate(post.postID)}
     >
