@@ -21,7 +21,7 @@ export default function AuthPostCard({ post }: { post: Post }) {
           <span className="text-xl mr-2">
             <TbHeartHandshake className="text-red-400" />
           </span>
-          <span className="text-accent font-medium text-lg">{post.emphatizeCount}</span>
+          <span className="text-accent font-medium text-lg">{post.empathizeCount}</span>
         </div>
       </div>
     </div>

@@ -30,8 +30,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
         </span>
         <input
           type="text"
-          placeholder="Find and share stories of resilience and strength.."
-          className="p-2 w-full outline-none placeholder-accent-dark text-accent bg-transparent"
+          placeholder="Search for stories..."
+          className="p-2 text-sm md:text-base w-full outline-none placeholder-accent-dark text-accent bg-transparent"
           value={value}
           onChange={onChange}
         />
@@ -102,12 +102,12 @@ const HomePage = () => {
 
   return (
     <MainLayout>
-      <div className="py-24 flex justify-center items-center text-accent flex-col gap-4">
-        <div className="text-4xl font-medium">Understanding others' struggles makes us stronger.</div>
-        <div className="text-lg font-extralight text-gray-400">
+      <div className="py-8 lg:py-24 flex justify-start lg:justify-center lg:items-center text-accent flex-col gap-4">
+        <div className="hidden text-center lg:block text-4xl font-medium">Understanding others' struggles makes us stronger.</div>
+        <div className="hidden text-center lg:block text-lg font-extralight text-gray-400">
         Empathy builds bridges. Let's connect and heal as one community.
         </div>
-        <div className="w-1/2">
+        <div className="w-full lg:w-1/2">
           <SearchInput
             value={search}
             onChange={handleSearchChange}
@@ -115,7 +115,7 @@ const HomePage = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
           <div className="justify-center flex col-span-3">
             <Loader />
