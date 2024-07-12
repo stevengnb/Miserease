@@ -2,17 +2,26 @@ import { Post } from "../lib/types/post-type";
 import { TbHeartHandshake } from "react-icons/tb";
 import { formatDate } from "../lib/services/formatter-service";
 import { truncateContent } from "../lib/utils/string-util";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCard({ post }: { post: Post }) {
   const txtColor = post.resolved ? "text-primary" : "text-accent";
   console.log(post)
+
+  const navigate = useNavigate()
+
+  const handleDetailNavigate = (id? : string) => {
+    navigate(`/post/${id}`);
+  }
+  
   return (
     <div
       className={
         post.resolved
-          ? "rounded-xl border-4 bg-accent  shadow-lg p-4"
-          : "rounded-xl bg-neutral shadow-lg p-4"
+          ? "rounded-xl border-4 bg-accent  shadow-lg p-4 hover:cursor-pointer"
+          : "rounded-xl bg-neutral shadow-lg p-4 hover:cursor-pointer"
       }
+      onClick={() => handleDetailNavigate(post.postID)}
     >
       <div className="p-2 lg:p-4">
         <h2 className={`${txtColor} text-xl text-accent font-semibold mb-2`}>

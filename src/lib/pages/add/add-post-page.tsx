@@ -7,7 +7,8 @@ import { addPost } from "../../services/post-service";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../components/loader";
-import BackButton from "../../../components/back-button";
+import FloatingButton from "../../../components/float-button";
+import { IoArrowBack } from "react-icons/io5";
 
 export default function AddPost() {
   const navigate = useNavigate();
@@ -110,7 +111,9 @@ export default function AddPost() {
 
   return (
     <div className="overflow-y-hidden overflow-x-hidden h-screen w-screen bg-primary flex items-center text-base text-accent pt-28 p-6 md:p-16 md:py-24 lg:p-28 lg:px-40 xl:p-40 xl:px-60 text-mono tracking-widest relative">
-      <BackButton isFixed={true} />
+      <FloatingButton isFixed={true} >
+        <IoArrowBack className="w-6 h-6"/>
+      </FloatingButton>
       <div className="flex flex-col h-full w-full items-center justify-center">
         <div className="flex flex-col lg:flex-row items-start gap-3 lg:gap-0 lg:items-center justify-center w-full">
           <div className="flex items-center justify-center">

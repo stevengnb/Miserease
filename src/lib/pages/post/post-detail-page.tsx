@@ -11,6 +11,9 @@ import {
 } from "../../services/post-service";
 import { useEffect, useState } from "react";
 import Loader from "../../../components/loader";
+import FloatingButton from "../../../components/float-button";
+import { IoArrowBack } from "react-icons/io5";
+
 import { auth } from "../../../firebase/firebase-config";
 import { FaRegLightbulb } from "react-icons/fa";
 import { resolve } from "path";
@@ -86,7 +89,9 @@ export default function PostDetailPage() {
         ) : post ? (
           <>
             <div className="w-max h-max flex relative items-center">
-              <BackButton isDetail={true} />
+              <FloatingButton isDetail={true} >
+                <IoArrowBack className="w-6 h-6" />
+              </FloatingButton>
               <span className="text-accent rounded-xl p-3 text-lg h-12 w-max pl-8">
                 The unfolded story
               </span>
