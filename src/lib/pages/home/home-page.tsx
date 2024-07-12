@@ -21,9 +21,9 @@ const HomePage = () => {
 
   return (
     <MainLayout>
-      <button className="text-accent" onClick={handleLogout}>
-        Logout
-      </button>
+      <div className="flex ">
+
+      </div>
       <div className="p-4 grid grid-cols-4">
         <PostCard post={dummyPost} />
         <PostCard post={dummyPost} />
