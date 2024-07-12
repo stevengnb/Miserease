@@ -4,59 +4,49 @@ import { useParams } from "react-router-dom";
 import { formatDate } from "../../services/formatter-service";
 import { TbHeartHandshake } from "react-icons/tb";
 import BackButton from "../../../components/back-button";
-import { getPostById } from "../../services/post-service";
+import {
+  empathizePost,
+  getPostById,
+  unempathizePost,
+} from "../../services/post-service";
 import { useEffect, useState } from "react";
-import { isEmptyId } from "../../utils/validate-util";
 import Loader from "../../../components/loader";
+import { auth } from "../../../firebase/firebase-config";
+import { FaRegLightbulb } from "react-icons/fa";
+import { resolve } from "path";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isResolve, setResolve] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function FunctionButton({
-    icon = <TbHeartHandshake className="w-6 h-6" />,
-    onClick = () => {},
-  }) {
-    const [hide, setHide] = useState(true);
-
+  const checkIsEmpathized = () => {
     return (
-      <button
-        onMouseOver={() => {
-          setHide(false);
-        }}
-        onMouseOut={() => {
-          setHide(true);
-        }}
-        className="w-max rounded-full p-2 bg-accent text-neutral flex items-center justify-center transition-all duration-300 shadow-xl"
-        onClick={onClick}
-      >
-        {icon}
-        <span className={`ml-2 ${hide ? "hidden" : "block"}`}>Emphatize</span>
-      </button>
+      post &&
+      post.posterID &&
+      post.empathizedUser &&
+      post.empathizedUser?.length >= 0 &&
+      auth.currentUser &&
+      post.empathizedUser?.includes(auth.currentUser?.uid)
     );
-  }
+  };
 
-  // const post: Post = {
-  //   postID: "adslfkajsldfjkasldfkjs",
-  //   posterID: "lskjdslfjdslfkjasdf",
-  //   title: "Hackathon day 1 udah di contek :(",
-  //   content:
-  //     "Pada jam 18.28 pada saat saya membahas dengan teman saya, ada orang yang lewat mencontek ide kita huhu",
-  //   postedDate: new Date(Date.now()),
-  //   category: ["School", "Personal"],
-  //   resolved: false,
-  //   resolvedComment: "",
-  //   empathizeCount: 232,
-  //   archived: false,
-  //   banned: false,
-  // };
+  const changeEmpathized = async (postID: string) => {
+    if (checkIsEmpathized()) {
+      console.log("lakuin unempathize");
+      await unempathizePost(postID);
+    } else {
+      console.log("lakuin empathizeeeeeee");
+      const response = await empathizePost(postID);
+      console.log(response.message);
+    }
+  };
 
-  const fetchPost = async (postId: string) => {
+  const fetchPost = (postId: string) => {
     setLoading(true);
-    try {
-      const response = await getPostById(postId);
+    const unsubscribe = getPostById(postId, (response) => {
       if (response.success) {
         if (response.data) {
           console.log("Set postnya");
@@ -68,11 +58,14 @@ export default function PostDetailPage() {
       } else {
         setError("Failed to retrieve post!");
       }
-    } catch (error) {
-      setError("Failed to retrieve post!");
-    } finally {
       setLoading(false);
-    }
+    });
+
+    return unsubscribe;
+  };
+
+  const handleResolve = () => {
+    setResolve(!isResolve);
   };
 
   useEffect(() => {
@@ -103,7 +96,13 @@ export default function PostDetailPage() {
                 <div className="text-accent font-semibold text-3xl">
                   <p>{post.title}</p>
                 </div>
-                <div className="bg-neutral text-sm font-thin px-6 py-3 rounded-3xl">
+                <div
+                  className={
+                    post.resolved
+                      ? "bg-accent text-neutral text-sm font-thin px-6 py-3 rounded-3xl"
+                      : "bg-neutral text-accent text-sm font-thin px-6 py-3 rounded-3xl"
+                  }
+                >
                   <div>{post.resolved ? "Resolved" : "Unresolved"}</div>
                 </div>
               </div>
@@ -137,13 +136,28 @@ export default function PostDetailPage() {
                 <div className="text-accent text-lg">{post.content}</div>
               </div>
               <div className="flex gap-3">
-                {/* <button className="flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-8 text-sm hover:bg-neutral hover:text-accent transition-all duration-300 ease-in-out">
-                  <TbHeartHandshake className="text-lg" />
-                  Emphatize
-                </button> */}
-                <FunctionButton />
-                <FunctionButton />
-                <FunctionButton />
+                <button
+                  className={
+                    !checkIsEmpathized()
+                      ? "w-max rounded-full p-2 bg-neutral text-accent hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
+                      : "w-max rounded-full p-2 bg-accent text-neutral hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
+                  }
+                  onClick={() => post.postID && changeEmpathized(post.postID)}
+                >
+                  <TbHeartHandshake className="w-6 h-6" />
+                </button>
+                {auth.currentUser && auth.currentUser.uid && (
+                  <button
+                    className={
+                      !isResolve
+                        ? "w-max rounded-full p-2 bg-neutral text-accent hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
+                        : "w-max rounded-full p-2 bg-accent text-neutral hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
+                    }
+                    onClick={handleResolve}
+                  >
+                    <FaRegLightbulb className="w-6 h-6" />
+                  </button>
+                )}
               </div>
             </div>
           </>

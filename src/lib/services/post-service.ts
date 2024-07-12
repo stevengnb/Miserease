@@ -4,9 +4,11 @@ import {
   arrayUnion,
   collection,
   doc,
+  DocumentSnapshot,
   getDoc,
   getDocs,
   increment,
+  onSnapshot,
   orderBy,
   query,
   updateDoc,
@@ -63,6 +65,7 @@ export const addPost = async (post: Post) => {
   const uid = user.uid;
   const postedDate = new Date(Date.now());
   const resolvedComment = null;
+  const empathizedUser = [] as string[];
   const empathizeCount = 0;
 
   // set auto generated field
@@ -73,6 +76,7 @@ export const addPost = async (post: Post) => {
     resolved: false,
     resolvedComment: resolvedComment,
     empathizeCount: empathizeCount,
+    empathizedUser: empathizedUser,
     archived: false,
     banned: false,
   };
@@ -280,34 +284,44 @@ export const getAllPostByDate = async () => {
   }
 };
 
-export const getAllPostByCategory = async (category: string) => {};
-
-export const getPostById = async (postID: string) => {
+export const getPostById = (
+  postID: string,
+  callback: (result: {
+    success: boolean;
+    data?: Post;
+    message?: string;
+  }) => void
+) => {
   const postDocRef = doc(db, "posts", postID);
 
-  try {
-    const postDoc = await getDoc(postDocRef);
-    if (postDoc.exists()) {
-      return {
-        success: true,
-        data: {
-          postID: postDoc.id,
-          ...postDoc.data(),
-          postedDate: postDoc.data().postedDate.toDate(),
-        } as Post,
-      };
-    } else {
-      return {
+  const unsubscribe = onSnapshot(
+    postDocRef,
+    (postDoc: DocumentSnapshot) => {
+      if (postDoc.exists()) {
+        callback({
+          success: true,
+          data: {
+            postID: postDoc.id,
+            ...postDoc.data(),
+            postedDate: postDoc.data()!.postedDate.toDate(),
+          } as Post,
+        });
+      } else {
+        callback({
+          success: false,
+          message: "Post not found",
+        });
+      }
+    },
+    (error) => {
+      callback({
         success: false,
-        message: "Post not found",
-      };
+        message: "Error fetching post",
+      });
     }
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error fetching post",
-    };
-  }
+  );
+
+  return unsubscribe; // Return the unsubscribe function to allow cleanup
 };
 
 export const getAllPostByTitle = async (search: string) => {
@@ -376,13 +390,13 @@ export const getOwnedPost = async () => {
       }
     }
 
-        return posts
-    } catch (error) {
-        return {
-            success: false,
-            message: "Error fetching posts",
-        };
-    }
+    return posts;
+  } catch (error) {
+    return {
+      success: false,
+      message: "Error fetching posts",
+    };
+  }
 };
 
 // ----------------------------------------------------------------------------------------------------------------------
@@ -390,26 +404,36 @@ export const getOwnedPost = async () => {
 // ----------------------------------------------------------------------------------------------------------------------
 
 export const empathizePost = async (postID: string) => {
+  const user = auth.currentUser;
+  if (!user) {
+    return {
+      success: false,
+      message: "User not found",
+    };
+  }
+
   const postDocRef = doc(db, "posts", postID);
 
   try {
-    const response = await addEmpathizedPostUser(postID);
-
-    if (!response.success) {
-      return response;
-    }
-
     const postSnap = await getDoc(postDocRef);
-
     if (!postSnap.exists()) {
       return {
         success: false,
         message: "Post doesn't exist!",
       };
     }
+    const postData = postSnap.data();
+
+    if (postData.empathizedUser && postData.empathizedUser.includes(user.uid)) {
+      return {
+        success: false,
+        message: "User has already empathized with this post",
+      };
+    }
 
     await updateDoc(postDocRef, {
       empathizeCount: increment(1),
+      empathizedUser: arrayUnion(...[user.uid]),
     });
 
     return {
@@ -424,50 +448,51 @@ export const empathizePost = async (postID: string) => {
   }
 };
 
-export const addEmpathizedPostUser = async (postID: string) => {
-  const user = auth.currentUser;
-  if (!user) {
-    return {
-      success: false,
-      message: "User not found",
-    };
-  }
+// export const addEmpathizedPostUser = async (postID: string) => {
+//   const user = auth.currentUser;
+//   if (!user) {
+//     return {
+//       success: false,
+//       message: "User not found",
+//     };
+//   }
 
-  const docRef = doc(db, "users", user.uid);
-  try {
-    const docSnap = await getDoc(docRef);
+//   const postDocRef = doc(db, 'posts', postID);
 
-    if (docSnap.exists()) {
-      const userData = docSnap.data();
+//   try {
+//     const docSnap = await getDoc(postDocRef);
 
-      if (userData.empathizedPost && userData.empathizedPost.includes(postID)) {
-        return {
-          success: false,
-          message: "User has already empathized with this post",
-        };
-      }
+//     if (docSnap.exists()) {
+//       const postData = docSnap.data();
 
-      await updateDoc(docRef, {
-        empathizedPost: arrayUnion(...[postID]),
-      });
+//       if (postData.empathizedUser && postData.empathizedPost.includes(user.uid)) {
+//         return {
+//           success: false,
+//           message: "User has already empathized with this post",
+//         };
+//       }
 
-      return {
-        success: true,
-        message: "Successfully empathized with the post",
-      };
-    } else {
-      return {
-        success: false,
-        message: "User document not found",
-      };
-    }
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error empathized from user",
-    };
-  }
-};
+//       await updateDoc(postDocRef, {
+//         empathizedUser: arrayUnion(...[user.uid]),
+//       });
+
+//       return {
+//         success: true,
+//         message: "Successfully empathized with the post",
+//       };
+//     } else {
+//       return {
+//         success: false,
+//         message: "User document not found",
+//       };
+//     }
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: "Error empathized from user",
+//     };
+//   }
+// };
 
 export const unempathizePost = async (postID: string) => {
   const user = auth.currentUser;
@@ -478,48 +503,39 @@ export const unempathizePost = async (postID: string) => {
     };
   }
 
-  const userDocRef = doc(db, "users", user.uid);
   const postDocRef = doc(db, "posts", postID);
 
   try {
-    const userDocSnap = await getDoc(userDocRef);
+    const postSnap = await getDoc(postDocRef);
 
-    if (userDocSnap.exists()) {
-      const userData = userDocSnap.data();
-      if (userData.empathizedPost && userData.empathizedPost.includes(postID)) {
-        const postSnap = await getDoc(postDocRef);
-
-        if (!postSnap.exists()) {
-          return {
-            success: false,
-            message: "Post doesn't exist!",
-          };
-        }
-
-        await updateDoc(postDocRef, {
-          empathizeCount: increment(-1),
-        });
-
-        await updateDoc(userDocRef, {
-          empathizedPost: arrayRemove(postID),
-        });
-
-        return {
-          success: true,
-          message: "Successfully unempathized the post",
-        };
-      } else {
-        return {
-          success: false,
-          message: "User has not empathized with this post",
-        };
-      }
-    } else {
+    if (!postSnap.exists()) {
       return {
         success: false,
-        message: "User document not found",
+        message: "Post doesn't exist!",
       };
     }
+
+    const postData = postSnap.data();
+
+    if (
+      postData.empathizedUser &&
+      !postData.empathizedUser.includes(user.uid)
+    ) {
+      return {
+        success: false,
+        message: "User has not empathized with this post",
+      };
+    }
+
+    await updateDoc(postDocRef, {
+      empathizeCount: increment(-1),
+      empathizedUser: arrayRemove(user.uid),
+    });
+
+    return {
+      success: true,
+      message: "Successfully unempathized the post",
+    };
   } catch (error) {
     return {
       success: false,
@@ -527,6 +543,56 @@ export const unempathizePost = async (postID: string) => {
     };
   }
 };
+
+// export const checkPostOwnerEmpathize = async (postID: string) => {
+//   const user = auth.currentUser;
+//   if (!user) {
+//     return {
+//       success: false,
+//       message: "User not authenticated",
+//     };
+//   }
+
+//   const docRef = doc(db, "users", user.uid);
+//   try {
+//     const docSnap = await getDoc(docRef);
+
+//     const [isOwner, setIsOwner] = useState(false);
+//     const [isEmpathize, setIsEmpathize] = useState(false);
+
+//     if (docSnap.exists()) {
+//       const userData = docSnap.data();
+
+//       if (userData.ownedPost && userData.ownedPost.includes(postID)) {
+//         setIsOwner(true);
+//       }
+//       if (userData.empathizedPost && userData.empathizedPost.includes(postID)) {
+//         setIsEmpathize(true);
+//       }
+
+//       return {
+//         success: true,
+//         message: "Success",
+//         owner: isOwner,
+//         empathized: isEmpathize,
+//       };
+//     } else {
+//       return {
+//         success: false,
+//         message: "User document not found",
+//         owner: false,
+//         empathized: false,
+//       };
+//     }
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: "Error fetch user",
+//       owner: false,
+//       empathized: false,
+//     };
+//   }
+// };
 
 // ----------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------- ARCHIVE POST

@@ -1,4 +1,3 @@
-import path from "path";
 import ProtectedRoute from "../middleware/protected-route";
 import AddPost from "../pages/add/add-post-page";
 import LoginPage from "../pages/auth/login-page";
@@ -47,6 +46,10 @@ export const router = [
   },
   {
     path: "/post/:id",
-    element: <PostDetailPage />,
+    element: (
+      <ProtectedRoute>
+        <PostDetailPage />
+      </ProtectedRoute>
+    ),
   },
 ];
