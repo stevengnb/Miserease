@@ -1,4 +1,4 @@
-import { addPost, getOwnedPost, userEmpathizePost } from "../../services/post-service";
+import { addPost, empathizePost, getOwnedPost, unempathizePost } from "../../services/post-service";
 import { loginUser, logoutUser, registerUser, updateUser } from "../../services/user-service";
 import { Post } from "../../types/post-type";
 import { UserLogin, UserRegister, UserUpdate } from "../../types/user-type";
@@ -9,7 +9,6 @@ const TestPage = () => {
         const dummy : UserRegister = {
             email: "stevengnb@gmail.com",
             password: "miserease",
-            age: 20,
             gender: 'male'
         }
 
@@ -24,16 +23,6 @@ const TestPage = () => {
         }
 
         const response = await loginUser(dummy);
-        console.log(response.message)
-    }
-
-    const handleUpdateUser = async() => {
-        const dummy : UserUpdate = {
-            age: 18,
-            gender: 'male'
-        }
-
-        const response = await updateUser(dummy);
         console.log(response.message)
     }
 
@@ -57,7 +46,11 @@ const TestPage = () => {
     }
 
     const handleEmpathizePost = async() => {
-        const response = await userEmpathizePost("Wsg4DikzKLCNvAigWnRW")
+        const response = await empathizePost("Wsg4DikzKLCNvAigWnRW")
+        console.log(response.message)
+    }
+    const handleUnempathizePost = async() => {
+        const response = await unempathizePost("Wsg4DikzKLCNvAigWnRW")
         console.log(response.message)
     }
 
@@ -74,6 +67,8 @@ const TestPage = () => {
             <button onClick={handleGetOwnedPost}>Get Owned Post</button>
             <br />
             <button onClick={handleEmpathizePost}>Empathize</button>
+            <br />
+            <button onClick={handleUnempathizePost}>Unempathize</button>
         </div>
     )
 }
