@@ -16,7 +16,7 @@ export default function RegisterPage() {
     postedDate: new Date(),
     content: "This is a sample post about React Context.",
     resolvedComment: "",
-    emphatizeCount: 42,
+    empathizeCount: 42,
   };
 
   const navigate = useNavigate();

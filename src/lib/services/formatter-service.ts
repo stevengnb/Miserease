@@ -5,5 +5,5 @@ export function formatDate(date: Date): string {
     year: "numeric",
   };
   const formattedDate = date.toLocaleDateString("en-US", options);
-  return formattedDate.replace(",", "");
+  return formattedDate;
 }
