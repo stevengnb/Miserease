@@ -21,17 +21,23 @@ const HomePage = () => {
 
   return (
     <MainLayout>
-      <div className="flex ">
-
+      <div className="py-14 flex justify-center items-center text-accent flex-col gap-4">
+        <div className="text-4xl font-medium">Discover other's pain.</div>
+        <div className="text-lg font-extralight text-gray-400">Through knowing others, we know ourselves better.</div>
       </div>
-      <div className="p-4 grid grid-cols-4">
-        <PostCard post={dummyPost} />
-        <PostCard post={dummyPost} />
-        <PostCard post={dummyPost} />
-        <PostCard post={dummyPost} />
-        <PostCard post={dummyPost} />
-        <PostCard post={dummyPost} />
-        <PostCard post={dummyPost} />
+      <div className="flex w-full">
+        <div className="">
+
+        </div>
+        <div className="p-4 grid grid-cols-4">
+            <PostCard post={dummyPost} />
+            <PostCard post={dummyPost} />
+            <PostCard post={dummyPost} />
+            <PostCard post={dummyPost} />
+            <PostCard post={dummyPost} />
+            <PostCard post={dummyPost} />
+            <PostCard post={dummyPost} />
+        </div>
       </div>
     </MainLayout>
   );
