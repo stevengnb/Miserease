@@ -3,7 +3,7 @@ export interface Post {
     posterID?: string;
     title?: string;
     postedDate?: Date;
-    category?: string;
+    category?: string[];
     content?: string;
     resolved?: boolean;
     resolvedComment?: string | null;
