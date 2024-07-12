@@ -34,7 +34,7 @@ export const addPost = async (post: Post) => {
       message: "Post title must be filled!",
     };
   } else if (
-    post.category?.trim() === "" ||
+    (post.category?.length ?? 0) <= 0 ||
     post.category === null ||
     post.category === undefined
   ) {
