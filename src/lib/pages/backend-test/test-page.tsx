@@ -39,9 +39,9 @@ const TestPage = () => {
 
     const handleAddPost = async() => {
         const dummy : Post = {
-            title: "Hackathon day 1 udah di contek :(",
-            content: "Pada jam 18.28 pada saat saya membahas dengan teman saya, ada orang yang lewat mencontek ide kita huhu",
-            category: ["work", "personal"]
+            title: "I got a friend in me",
+            content: "This friend do sum silly things but is so serious with work haha",
+            category: ["relationships"]
         }
 
         const response = await addPost(dummy);

@@ -288,21 +288,29 @@ export const getPostById = async(postID : string) => {
     }
 }
 
-export const getAllPostByTitle = async (title: string) => {
-    const postsCollection = collection(db, 'posts');
-    const q = query(
-        postsCollection,
-        where('title', '>=', title),
-        where('title', '<=', title + '\uf8ff')
-    );
-    const querySnapshot = await getDocs(q);
+export const getAllPostByTitle = async (search: string) => {
+    try {
+        const querySnapshot = await getDocs(collection(db, 'posts'));
+        const filteredPosts = querySnapshot.docs.filter(doc => {
+            const title = doc.data().title.toLowerCase();
+            return title.includes(search.toLowerCase());
+        }).map(doc => ({
+            postID: doc.id,
+            ...doc.data(),
+            postedDate: doc.data().postedDate.toDate(),
+        })) as Post[];
 
-    const posts = querySnapshot.docs.map(doc => ({
-        postID: doc.id,
-        ...doc.data()
-    })) as Post[];
-
-    return posts;
+        return {
+            success : false,
+            message: "Failed to search",
+            data : filteredPosts
+        };
+    } catch (error) {
+        return {
+            success : false,
+            message: "Failed to search"
+        }
+    }
 };
 
 export const getOwnedPost = async () => {
@@ -353,4 +361,8 @@ export const getOwnedPost = async () => {
         };
     }
 };
+
+export const empathizedPost = async(postID : string) => {
+
+}
 
