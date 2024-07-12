@@ -3,11 +3,12 @@ import MainLayout from "../layout/main-layout";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../services/formatter-service";
 import { TbHeartHandshake } from "react-icons/tb";
-import BackButton from "../../../components/back-button";
 import { getPostById } from "../../services/post-service";
 import { useEffect, useState } from "react";
-import { isEmptyId } from "../../utils/validate-util";
 import Loader from "../../../components/loader";
+import FloatingButton from "../../../components/float-button";
+import { IoArrowBack } from "react-icons/io5";
+
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -93,7 +94,9 @@ export default function PostDetailPage() {
         ) : post ? (
           <>
             <div className="w-max h-max flex relative items-center">
-              <BackButton isDetail={true} />
+              <FloatingButton isDetail={true} >
+                <IoArrowBack className="w-6 h-6" />
+              </FloatingButton>
               <span className="text-accent rounded-xl p-3 text-lg h-12 w-max pl-8">
                 The unfolded story
               </span>

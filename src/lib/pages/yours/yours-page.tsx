@@ -5,6 +5,8 @@ import { isErrorResponse } from "../../utils/validate-util";
 import { Post } from "../../types/post-type";
 import Loader from "../../../components/loader";
 import PostCard from "../../../components/post-card";
+import { RiQuillPenLine } from "react-icons/ri";
+import FloatingButton from "../../../components/float-button";
 
 export default function YoursPage() {
 
@@ -48,6 +50,9 @@ export default function YoursPage() {
           posts.map((post) => <PostCard key={post.postID} post={post} />)
         )}
       </div>
+      <FloatingButton navigateTo="add-post" isFixed={true} position="bottom-right">
+        <RiQuillPenLine className="w-8 h-8"/>
+      </FloatingButton>
     </MainLayout>
   );
 }

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../lib/services/user-service";
 import { IoMdExit } from "react-icons/io";
 import styles from "./navbar.module.css";
+import { IoGridOutline } from "react-icons/io5";
 
 export default function Navbar() {
   const handleLogout = async () => {
@@ -10,8 +11,8 @@ export default function Navbar() {
   };
 
   const handleNavigateToOwned = () => {
-    navigate('/yours')
-  }
+    navigate("/yours");
+  };
 
   const navigate = useNavigate();
 
@@ -24,15 +25,20 @@ export default function Navbar() {
             onClick={handleNavigateToOwned}
             className={`bg-transparent text-accent font-medium text-base ${styles.navbarItem}`}
           >
-            Your Stories
+            <span className="hidden lg:block">Your Posts</span>
           </button>
         </div>
-        <button
-          onClick={handleLogout}
-          className="bg-secondary text-accent rounded-xl p-3 text-xl"
-        >
-          <IoMdExit />
-        </button>
+        <div className="flex gap-4 ">
+          <span onClick={handleNavigateToOwned} className="block lg:hidden bg-secondary rounded-xl p-3 text-xl hover:cursor-pointer">
+            <IoGridOutline />
+          </span>
+          <button
+            onClick={handleLogout}
+            className="bg-secondary text-accent rounded-xl p-3 text-xl"
+          >
+            <IoMdExit />
+          </button>
+        </div>
       </div>
     </div>
   );

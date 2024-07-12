@@ -10,6 +10,9 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { isErrorResponse } from "../../utils/validate-util";
 import Loader from "../../../components/loader";
+import FloatingButton from "../../../components/float-button";
+import { RiQuillPenLine } from "react-icons/ri";
+
 
 interface SearchInputProps {
   value: string;
@@ -128,6 +131,9 @@ const HomePage = () => {
           posts.map((post) => <PostCard key={post.postID} post={post} />)
         )}
       </div>
+      <FloatingButton navigateTo="add-post" isFixed={true} position="bottom-right">
+        <RiQuillPenLine className="w-8 h-8"/>
+      </FloatingButton>
     </MainLayout>
   );
 };
