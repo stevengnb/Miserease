@@ -6,7 +6,6 @@ export interface User {
 }
 
 export interface UserUpdate {
-    uid?: string
     age?: number;
     gender?: string;
 }

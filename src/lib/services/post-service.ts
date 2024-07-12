@@ -53,8 +53,6 @@ export const addPost = async (post: Post) => {
     };
   }
 
-  console.log("Test");
-
   // get auto generated field
   const uid = user.uid;
   const postedDate = new Date(Date.now());
@@ -74,7 +72,7 @@ export const addPost = async (post: Post) => {
   };
 
   // exclude postID to get auto generated id from firebase
-  const { posterID, ...excludedPost } = post;
+  const { postID, ...excludedPost } = post;
 
   // add post to database
   try {
@@ -115,7 +113,7 @@ export const addOwnedPost = async (postID: string) => {
   const docRef = doc(db, "users", user.uid);
   try {
     await updateDoc(docRef, {
-      ownedPost: arrayUnion(...postID),
+      ownedPost: arrayUnion(...[postID]),
     });
 
     return {
@@ -210,7 +208,7 @@ export const reportPost = async (postID: string, reason: string) => {
         };
       } else {
         await updateDoc(reportedPostDoc.ref, {
-          reason: arrayUnion(...reason),
+          reason: arrayUnion(...[reason]),
         });
 
         return {
@@ -240,7 +238,7 @@ export const reportPost = async (postID: string, reason: string) => {
   }
 };
 
-export const getAllPost = async () => {
+export const getAllPostByDate = async () => {
   const postsCollection = collection(db, "posts");
   const q = query(postsCollection, orderBy("postedDate", "desc"));
 
@@ -262,47 +260,105 @@ export const getAllPost = async () => {
   }
 };
 
-export const getOwnedPost = async () => {
-  const user = auth.currentUser;
-  if (!user) {
-    return {
-      success: false,
-      message: "User not found",
-    };
-  }
+export const getAllPostByCategory = async(category: string) => {
+    
+}
 
-  const docRef = doc(db, "users", user.uid);
-  try {
-    const docSnap = await getDoc(docRef);
+export const getPostById = async(postID : string) => {
+    const postDocRef = doc(db, 'posts', postID);
 
-    if (!docSnap.exists) {
-      return {
-        success: false,
-        message: "Error fetching user",
-      };
+    try {
+        const postDoc = await getDoc(postDocRef);
+        if (postDoc.exists()) {
+            return {
+                success: "true",
+                data: postDoc as Post,
+            }
+        } else {
+            return {
+                success: false,
+                message: "Post not found"
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Error fetching post"
+        };
     }
+}
 
-    const ownedPostID: string[] = docSnap.data()?.ownedPost || [];
-    const posts: Post[] = [];
+export const getAllPostByTitle = async (search: string) => {
+    try {
+        const querySnapshot = await getDocs(collection(db, 'posts'));
+        const filteredPosts = querySnapshot.docs.filter(doc => {
+            const title = doc.data().title.toLowerCase();
+            return title.includes(search.toLowerCase());
+        }).map(doc => ({
+            postID: doc.id,
+            ...doc.data(),
+            postedDate: doc.data().postedDate.toDate(),
+        })) as Post[];
 
-    for (const postID of ownedPostID) {
-      const postDocRef = doc(db, "posts", postID);
-      const postDoc = await getDoc(postDocRef);
-
-      if (postDoc.exists()) {
-        const postData = postDoc.data() as Post;
-        postData.postID = postDoc.id;
-        posts.push(postData);
-      } else {
-        console.warn(`Post with ID ${postID} not found`);
-      }
+        return filteredPosts
+    } catch (error) {
+        return {
+            success : false,
+            message: "Failed to search"
+        }
     }
-
-    return posts;
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error fetching posts",
-    };
-  }
 };
+
+export const getOwnedPost = async () => {
+    const user = auth.currentUser;
+        if (!user) {
+        return {
+            success: false,
+            message: "User not found",
+        };
+    }
+
+    const docRef = doc(db, "users", user.uid);
+    try {
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists) {
+            return {
+                success: false,
+                message: "Error fetching user 1",
+            };
+        }
+
+        const ownedPostID: string[] = docSnap.data()?.ownedPost || [];
+        const posts: Post[] = [];
+
+        for (const postID of ownedPostID) {
+            const postDocRef = doc(db, "posts", postID);
+            const postDoc = await getDoc(postDocRef);
+
+            if (postDoc.exists()) {
+                const postData = postDoc.data() as Post;
+                postData.postID = postDoc.id;
+                posts.push(postData);
+            } else {
+                console.warn(`Post with ID ${postID} not found`);
+            }
+        }
+
+        return {
+            success: true,
+            message: "Success retrieve own posts",
+            data: posts
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Error fetching posts",
+        };
+    }
+};
+
+export const empathizedPost = async(postID : string) => {
+
+}
+
