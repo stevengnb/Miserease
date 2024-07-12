@@ -6,7 +6,6 @@ import { loginUser } from "../../services/user-service";
 import Loader from "../../../components/loader";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import PostCard from "../../../components/post-card";
 import { Post } from "../../types/post-type";
 import AuthPostCard from "./auth-post-card";
 
@@ -16,7 +15,6 @@ export default function LoginPage() {
     postID: "1",
     title: "I failed my exam so bad :(",
     postedDate: new Date(),
-    category: "Web Development",
     content: "This is a sample post about React Context.",
     resolvedComment: "",
     emphatizeCount: 42,
