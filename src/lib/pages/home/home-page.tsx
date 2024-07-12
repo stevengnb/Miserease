@@ -13,7 +13,7 @@ const HomePage = () => {
             <div className="text-2xl">
                 <button  onClick={handleLogout}>Logout</button>
             </div>
-        </MainLayout>
+        </MainLayout>   
     )
 }
 
