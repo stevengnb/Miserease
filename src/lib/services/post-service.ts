@@ -240,7 +240,7 @@ export const reportPost = async (postID: string, reason: string) => {
   }
 };
 
-export const getAllPost = async () => {
+export const getAllPostByDate = async () => {
   const postsCollection = collection(db, "posts");
   const q = query(postsCollection, orderBy("postedDate", "desc"));
 
@@ -260,6 +260,27 @@ export const getAllPost = async () => {
       message: "Error fetching posts",
     };
   }
+};
+
+export const getAllPostByCategory = async(category: string) => {
+    
+}
+
+export const getAllPostByTitle = async (title: string) => {
+    const postsCollection = collection(db, 'posts');
+    const q = query(
+        postsCollection,
+        where('title', '>=', title),
+        where('title', '<=', title + '\uf8ff')
+    );
+    const querySnapshot = await getDocs(q);
+
+    const posts = querySnapshot.docs.map(doc => ({
+        postID: doc.id,
+        ...doc.data()
+    })) as Post[];
+
+    return posts;
 };
 
 export const getOwnedPost = async () => {
@@ -306,3 +327,4 @@ export const getOwnedPost = async () => {
     };
   }
 };
+
