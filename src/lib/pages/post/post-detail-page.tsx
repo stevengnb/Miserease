@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { formatDate } from "../../services/formatter-service";
 import { TbHeartHandshake } from "react-icons/tb";
+import BackButton from "../../../components/back-button";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,20 +21,22 @@ export default function PostDetailPage() {
     category: ["School", "Personal"],
     resolved: false,
     resolvedComment: "",
-    emphatizeCount: 232,
+    empathizeCount: 232,
     archived: false,
     banned: false,
   };
+
   return (
     <MainLayout>
       <div className="mx-12">
-        <div className="w-max h-max flex">
-          <button
+        <div className="w-max h-max flex relative items-center">
+          {/* <button
             onClick={Back}
             className="bg-secondary text-accent rounded-xl p-3 text-xl h-12 w-min"
           >
             <IoMdArrowRoundBack />
-          </button>
+          </button> */}
+          <BackButton isDetail={true}/>
           <span className="text-accent rounded-xl p-3 text-lg h-12 w-max">
             The unfolded story
           </span>
@@ -57,7 +60,7 @@ export default function PostDetailPage() {
               <span className="text-xl flex items-center text-empathy">
                 <TbHeartHandshake />
                 <span className="text-gray-400 text-base pl-1">
-                  {post.emphatizeCount}{" "}
+                  {post.empathizeCount}{" "}
                   <span className="text-gray-300">Emphatizer</span>
                 </span>
               </span>
