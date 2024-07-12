@@ -124,7 +124,7 @@ export default function RegisterPage() {
             )}
             <p className="mt-6 text-sm text-accent">
               Already have an account?{" "}
-              <span className="font-bold hover:cursor-pointer hover:text-neutral transition-all duration-300 ease-in-out">
+              <span onClick={() => navigate('/login')} className="font-bold hover:cursor-pointer hover:text-neutral transition-all duration-300 ease-in-out">
                 Login
               </span>
             </p>

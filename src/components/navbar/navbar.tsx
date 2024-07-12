@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../lib/services/user-service";
 import { IoMdExit } from "react-icons/io";
+import styles from "./navbar.module.css";
 
 export default function Navbar() {
   const handleLogout = async () => {
@@ -9,7 +10,7 @@ export default function Navbar() {
   };
 
   const handleNavigateToOwned = () => {
-    navigate('/owned')
+    navigate('/yours')
   }
 
   const navigate = useNavigate();
@@ -21,9 +22,9 @@ export default function Navbar() {
           <div className="font-semibold">Miserease</div>
           <button
             onClick={handleNavigateToOwned}
-            className="bg-transparent text-accent font-medium text-base"
+            className={`bg-transparent text-accent font-medium text-base ${styles.navbarItem}`}
           >
-            Owned
+            Your Stories
           </button>
         </div>
         <button

@@ -376,17 +376,13 @@ export const getOwnedPost = async () => {
       }
     }
 
-    return {
-      success: true,
-      message: "Success retrieve own posts",
-      data: posts,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error fetching posts",
-    };
-  }
+        return posts
+    } catch (error) {
+        return {
+            success: false,
+            message: "Error fetching posts",
+        };
+    }
 };
 
 // ----------------------------------------------------------------------------------------------------------------------
