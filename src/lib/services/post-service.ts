@@ -239,25 +239,29 @@ export const reportPost = async (postID: string, reason: string) => {
 };
 
 export const getAllPostByDate = async () => {
-  const postsCollection = collection(db, "posts");
-  const q = query(postsCollection, orderBy("postedDate", "desc"));
+    const postsCollection = collection(db, 'posts');
+    const q = query(postsCollection, orderBy('postedDate', 'desc'));
 
-  try {
-    const querySnapshot = await getDocs(q);
+    try {
+        const querySnapshot = await getDocs(q);
+        const posts: Post[] = [];
 
-    const posts: Post[] = querySnapshot.docs.map((doc) => ({
-      postID: doc.id,
-      ...doc.data(),
-      postedDate: doc.data().postedDate.toDate(),
-    })) as Post[];
+        querySnapshot.forEach(doc => {
+        posts.push({
+            postID: doc.id,
+            ...doc.data(),
+            postedDate: doc.data().postedDate.toDate(),
+        } as Post);
+        });
 
-    return posts;
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error fetching posts",
-    };
-  }
+        return posts;
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        return {
+        success: false,
+        message: 'Error fetching posts',
+        };
+    }
 };
 
 export const getAllPostByCategory = async(category: string) => {
@@ -290,22 +294,33 @@ export const getPostById = async(postID : string) => {
 
 export const getAllPostByTitle = async (search: string) => {
     try {
-        const querySnapshot = await getDocs(collection(db, 'posts'));
-        const filteredPosts = querySnapshot.docs.filter(doc => {
-            const title = doc.data().title.toLowerCase();
-            return title.includes(search.toLowerCase());
-        }).map(doc => ({
-            postID: doc.id,
-            ...doc.data(),
-            postedDate: doc.data().postedDate.toDate(),
-        })) as Post[];
+        const postsCollection = collection(db, 'posts');
+        const querySnapshot = await getDocs(postsCollection);
 
-        return filteredPosts
-    } catch (error) {
+        const filteredPosts: Post[] = [];
+
+        querySnapshot.forEach(doc => {
+            const title = doc.data().title.toLowerCase();
+            if (title.includes(search.toLowerCase())) {
+                filteredPosts.push({
+                    postID: doc.id,
+                    ...doc.data(),
+                    postedDate: doc.data().postedDate.toDate(),
+                } as Post);
+            }
+        });
+
         return {
             success : false,
-            message: "Failed to search"
-        }
+            message: "Failed to search",
+            data : filteredPosts
+        };
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+        return {
+            success: false,
+            message: "Failed to search posts",
+        };
     }
 };
 
