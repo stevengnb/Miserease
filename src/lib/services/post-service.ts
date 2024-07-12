@@ -1,4 +1,4 @@
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase-config";
 import { Post } from "../types/post-type";
 
@@ -33,7 +33,7 @@ export const addPost = async (post: Post) => {
             message: "Post date is invalid!",
         };
     } else if (
-        post.category?.trim() === "" ||
+        (post.category?.length ?? 0) <= 0 ||
         post.category === null ||
         post.category === undefined
     ) {
@@ -51,8 +51,6 @@ export const addPost = async (post: Post) => {
             message: "Post content must be filled!",
         };
     }
-
-    console.log("Test");
 
     // get auto generated field
     const uid = user.uid;
@@ -83,7 +81,7 @@ export const addPost = async (post: Post) => {
 
         const response = await addOwnedPost(addedPost.id)
 
-        if(!response?.success){
+        if (!response?.success) {
             return {
                 success: false,
                 message: "Post added successfully!",
@@ -102,7 +100,7 @@ export const addPost = async (post: Post) => {
     }
 };
 
-export const addOwnedPost = async(postID: string) => {
+export const addOwnedPost = async (postID: string) => {
     const user = auth.currentUser;
     if (!user) {
         return {
@@ -121,8 +119,8 @@ export const addOwnedPost = async(postID: string) => {
             success: true,
             message: "Success user posted",
         };
-        
-    } catch (error){
+
+    } catch (error) {
         return {
             success: false,
             message: "Error adding post to user",
@@ -156,7 +154,7 @@ export const resolvePost = async (postID: string, resolvedComment: string) => {
 
         // perform the update
         await updateDoc(postRef, {
-            status: true,
+            resolved: true,
             resolvedComment: resolvedComment,
         });
 
@@ -220,7 +218,7 @@ export const reportPost = async (postID: string, reason: string) => {
         }
 
         // add new reportedPost doc
-        await addDoc(collection(db, "reportedPosts") , {
+        await addDoc(collection(db, "reportedPosts"), {
             reportedPost: postID,
             reason: reason, // Initial reason array
             reportedAt: new Date(),
@@ -276,7 +274,7 @@ export const getOwnedPost = async () => {
     try {
         const docSnap = await getDoc(docRef);
 
-        if(!docSnap.exists){
+        if (!docSnap.exists) {
             return {
                 success: false,
                 message: "Error fetching user",
@@ -300,10 +298,72 @@ export const getOwnedPost = async () => {
         }
 
         return posts
-    } catch (error){
+    } catch (error) {
         return {
             success: false,
             message: "Error fetching posts",
+        };
+    }
+}
+
+export const archivePost = async (postID: string) => {
+    // get the document reference
+    const postRef = doc(db, "posts", postID);
+
+    try {
+        // fetch the document
+        const postSnap = await getDoc(postRef);
+
+        if (!postSnap.exists()) {
+            return {
+                success: false,
+                message: "Post doesn't exist!",
+            };
+        }
+
+        // perform the update
+        await updateDoc(postRef, {
+            archived: true,
+        });
+
+        return {
+            success: true,
+            message: "Post resolved successfully!",
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Failed to archive post: " + error,
+        };
+    }
+}
+
+export const deletePost = async (postID: string) => {
+    // get the document reference
+    const postRef = doc(db, "posts", postID);
+
+    try {
+        // fetch the document
+        const postSnap = await getDoc(postRef);
+
+        if (!postSnap.exists()) {
+            return {
+                success: false,
+                message: "Post doesn't exist!",
+            };
+        }
+        
+        // perform the update
+        await deleteDoc(postRef);
+
+        return {
+            success: true,
+            message: "Post deleted successfully!",
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Failed to delete post: " + error,
         };
     }
 }
