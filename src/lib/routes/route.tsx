@@ -19,9 +19,9 @@ export const router = [
   {
     path: "/home",
     element: (
-      // <ProtectedRoute>
+      <ProtectedRoute>
         <HomePage />
-      // </ProtectedRoute>
+      </ProtectedRoute>
     ),
   },
   {

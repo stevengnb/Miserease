@@ -30,7 +30,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         </span>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Find and share stories of resilience and strength.."
           className="p-2 w-full outline-none placeholder-accent-dark text-accent bg-transparent"
           value={value}
           onChange={onChange}
@@ -76,6 +76,9 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
+
+    if (!searchSubmitted) return;
+
     const fetchPosts = async () => {
       try {
         const postsData = await getAllPostByTitle(search);
@@ -90,6 +93,7 @@ const HomePage = () => {
         setError("Failed to fetch posts");
       } finally {
         setLoading(false);
+        setSearchSubmitted(false);
       }
     };
 
@@ -98,10 +102,10 @@ const HomePage = () => {
 
   return (
     <MainLayout>
-      <div className="py-14 flex justify-center items-center text-accent flex-col gap-4">
-        <div className="text-4xl font-medium">Discover other's pain.</div>
+      <div className="py-24 flex justify-center items-center text-accent flex-col gap-4">
+        <div className="text-4xl font-medium">Understanding others' struggles makes us stronger.</div>
         <div className="text-lg font-extralight text-gray-400">
-          Through knowing others, we know ourselves better.
+        Empathy builds bridges. Let's connect and heal as one community.
         </div>
         <div className="w-1/2">
           <SearchInput
