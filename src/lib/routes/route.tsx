@@ -1,6 +1,6 @@
 import path from "path";
 import ProtectedRoute from "../middleware/protected-route";
-import AddPost from "../pages/add/add-post";
+import AddPost from "../pages/add/add-post-page";
 import LoginPage from "../pages/auth/login-page";
 import RegisterPage from "../pages/auth/register-page";
 import HomePage from "../pages/home/home-page";
@@ -19,9 +19,9 @@ export const router = [
   {
     path: "/home",
     element: (
-      // <ProtectedRoute>
+      <ProtectedRoute>
         <HomePage />
-      // </ProtectedRoute>
+      </ProtectedRoute>
     ),
   },
   {

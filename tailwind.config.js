@@ -28,6 +28,11 @@ export default {
           DEFAULT: '#474973',
           dark: '#2e304d',
         },
+        empathy: {
+          light: '#FFC0CB',
+          DEFAULT: '#FFB6C1',
+          dark: '#FF69B4',
+        },
       },
     },
   },

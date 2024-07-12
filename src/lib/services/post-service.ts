@@ -311,9 +311,9 @@ export const getAllPostByTitle = async (search: string) => {
         });
 
         return {
-            success: true,
-            message: "Posts fetched successfully",
-            data: filteredPosts,
+            success : false,
+            message: "Failed to search",
+            data : filteredPosts
         };
     } catch (error) {
         console.error("Error fetching posts:", error);

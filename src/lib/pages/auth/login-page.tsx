@@ -10,7 +10,6 @@ import { Post } from "../../types/post-type";
 import AuthPostCard from "./auth-post-card";
 
 export default function LoginPage() {
-
   const dummyPost: Post = {
     postID: "1",
     title: "I failed my exam so bad :(",
@@ -33,17 +32,13 @@ export default function LoginPage() {
 
     if (response.success) {
       setLoading(false);
-
-      toast.success(response.message)
+      toast.success(response.message);
       navigate("/");
-
       return;
     }
 
     setLoading(false);
-
-    toast.error(response.message)
-    console.log(response.message);
+    toast.error(response.message);
   };
 
   return (
@@ -100,9 +95,9 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="hidden lg:flex w-[50%] bg-gray-800 h-full rounded-lg justify-center items-center">
-            <div className="w-96">
-              <AuthPostCard post={dummyPost}/>
-            </div>
+          <div className="w-96">
+            <AuthPostCard post={dummyPost} />
+          </div>
         </div>
       </div>
     </div>
