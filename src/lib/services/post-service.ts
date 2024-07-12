@@ -160,10 +160,11 @@ export const resolvePost = async (postID: string, resolvedComment: string) => {
         message: "Post doesn't exist!",
       };
     }
+    
 
     // perform the update
     await updateDoc(postRef, {
-      status: true,
+      resolved: true,
       resolvedComment: resolvedComment,
     });
 

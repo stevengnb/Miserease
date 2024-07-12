@@ -3,25 +3,30 @@ import MainLayout from "../layout/main-layout";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../services/formatter-service";
 import { TbHeartHandshake } from "react-icons/tb";
+import toast from "react-hot-toast";
 import {
   empathizePost,
   getPostById,
+  resolvePost,
   unempathizePost,
 } from "../../services/post-service";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import Loader from "../../../components/loader";
 import FloatingButton from "../../../components/float-button";
 import { IoArrowBack } from "react-icons/io5";
-
 import { auth } from "../../../firebase/firebase-config";
 import { FaRegLightbulb } from "react-icons/fa";
+import styles from "../add/add-post-page.module.css";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingResolve, setLoadingResolve] = useState(false);
   const [isResolve, setResolve] = useState(false);
+  const [resolvedComment, setResolvedComment] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showSend, setShowSend] = useState(false);
 
   const checkIsEmpathized = () => {
     return (
@@ -32,6 +37,10 @@ export default function PostDetailPage() {
       auth.currentUser &&
       post.empathizedUser?.includes(auth.currentUser?.uid)
     );
+  };
+
+  const handleTAChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setResolvedComment(event.target.value);
   };
 
   const changeEmpathized = async (postID: string) => {
@@ -65,6 +74,27 @@ export default function PostDetailPage() {
     return unsubscribe;
   };
 
+  const handleResolveComment = async () => {
+    console.log("Asdasd");
+    setLoadingResolve(true);
+
+    if (!post || !post.postID) {
+      setLoadingResolve(false);
+      return;
+    }
+
+    const response = await resolvePost(post?.postID, resolvedComment);
+    if (response.success) {
+      setLoading(false);
+      toast.success(response.message);
+      window.location.reload();
+      return;
+    }
+
+    setLoading(false);
+    toast.error(response.message);
+  };
+
   const handleResolve = () => {
     setResolve(!isResolve);
   };
@@ -74,6 +104,14 @@ export default function PostDetailPage() {
       fetchPost(id as string);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (resolvedComment) {
+      setShowSend(true);
+    } else {
+      setShowSend(false);
+    }
+  }, [resolvedComment]);
 
   return (
     <MainLayout>
@@ -87,7 +125,7 @@ export default function PostDetailPage() {
         ) : post ? (
           <>
             <div className="w-max h-max flex relative items-center">
-              <FloatingButton isDetail={true} >
+              <FloatingButton isDetail={true}>
                 <IoArrowBack className="w-6 h-6" />
               </FloatingButton>
               <span className="text-accent rounded-xl p-3 text-lg h-12 w-max pl-8">
@@ -149,19 +187,50 @@ export default function PostDetailPage() {
                 >
                   <TbHeartHandshake className="w-6 h-6" />
                 </button>
-                {auth.currentUser && auth.currentUser.uid && (
-                  <button
-                    className={
-                      !isResolve
-                        ? "w-max rounded-full p-2 bg-neutral text-accent hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
-                        : "w-max rounded-full p-2 bg-accent text-neutral hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
-                    }
-                    onClick={handleResolve}
-                  >
-                    <FaRegLightbulb className="w-6 h-6" />
-                  </button>
-                )}
+                {auth.currentUser &&
+                  auth.currentUser.uid &&
+                  post &&
+                  post.posterID &&
+                  auth.currentUser.uid === post.posterID &&
+                  !post.resolved && (
+                    <button
+                      className={
+                        !isResolve
+                          ? "w-max rounded-full p-2 bg-neutral text-accent hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
+                          : "w-max rounded-full p-2 bg-accent text-neutral hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl"
+                      }
+                      onClick={handleResolve}
+                    >
+                      <FaRegLightbulb className="w-6 h-6" />
+                    </button>
+                  )}
               </div>
+              {post.resolved && !loadingResolve && (
+                <div className="p-10">
+                  <p>Resolve Comment:</p>
+                  <p>{post.resolvedComment}</p>
+                </div>
+              )}
+              {isResolve && (
+                <div className="mt-8 flex flex-col items-center justify-center">
+                  <textarea
+                    value={resolvedComment}
+                    onChange={handleTAChange}
+                    className={`w-full h-3/4 md:h-full xl:px-16 text-lg bg-transparent rounded-lg resize-none focus:outline-none ${styles.customScrollbar}`}
+                    placeholder="What makes you let it go..."
+                  ></textarea>
+                  <button
+                    className={`${
+                      showSend ? styles.visible : ""
+                    } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 h-10 w-36 md:w-1/5 hover:bg-neutral hover:text-accent transition-all duration-300 ease-in-out ${
+                      styles.addButton
+                    }`}
+                    onClick={handleResolveComment}
+                  >
+                    {loadingResolve ? <Loader isNotAccent={true} /> : "Add"}
+                  </button>
+                </div>
+              )}
             </div>
           </>
         ) : (
