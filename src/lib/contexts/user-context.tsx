@@ -11,7 +11,7 @@ interface UserContextType {
 
 export const UserContext = createContext<UserContextType | null>(null);
 
-export default function UserContextProvider({children} : IChildren) {
+export default function UserContextProvider({ children }: IChildren) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();

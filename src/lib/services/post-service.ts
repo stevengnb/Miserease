@@ -82,7 +82,7 @@ export const addPost = async (post: Post) => {
   };
 
   // exclude postID to get auto generated id from firebase
-  const { postID, ...excludedPost } = post;
+  const { ...excludedPost } = post;
 
   // add post to database
   try {
@@ -314,7 +314,7 @@ export const getPostById = (
         });
       }
     },
-    (error) => {
+    () => {
       callback({
         success: false,
         message: "Error fetching post",

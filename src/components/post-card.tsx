@@ -31,7 +31,7 @@ export default function PostCard({ post }: { post: Post }) {
           {post.postedDate === undefined ? "n.d." : formatDate(post.postedDate)}
         </p>
         <p className={`text-sm lg:text-base text-accent mt-2 ${txtColor}`}>
-          {truncateContent(post.content)}
+          {truncateContent(post.content ? post.content : "")}
         </p>
         <div className="mt-4 flex items-center">
           <span className="text-xl mr-2">
