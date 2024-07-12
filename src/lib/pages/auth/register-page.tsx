@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
 import { UserRegister } from "../../types/user-type";
-import { loginUser, registerUser } from "../../services/user-service";
+import {  registerUser } from "../../services/user-service";
 import Loader from "../../../components/loader";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
