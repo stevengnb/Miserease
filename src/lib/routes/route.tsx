@@ -26,7 +26,11 @@ export const router = [
   },
   {
     path: "/add-post",
-    element: <AddPost />,
+    element: (
+      <ProtectedRoute>
+        <AddPost />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/test",
