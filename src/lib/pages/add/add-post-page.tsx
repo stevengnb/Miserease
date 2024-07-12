@@ -109,58 +109,56 @@ export default function AddPost() {
   }, [newPost.content]);
 
   return (
-    <MainLayout>
-      <div className="h-screen w-screen bg-primary flex items-center text-base text-accent p-40 px-60 text-mono tracking-widest">
-        <div className="flex flex-col h-full w-full items-center justify-center">
-          <div className="flex items-center">
-            <input
-              value={newPost.title}
-              type="text"
-              name="title"
-              placeholder="Give it a title..."
-              className="h-12 w-72 p-4 bg-neutral rounded-lg focus-visible:outline-none"
-              onChange={handleInputChange}
-            />
-            <span className="text-3xl mx-2">.</span>
-            <p className="ml-2 text-lg">This story is about</p>
-            <Select
-              isMulti
-              options={categories}
-              className="ml-3 text-accent"
-              classNamePrefix="react-select"
-              styles={customStyles}
-              onChange={handleCategoryChange}
-            />
-            <span className="text-3xl mx-2">.</span>
-          </div>
-          <div className="flex items-start justify-center w-full h-full my-8">
-            <textarea
-              value={newPost.content}
-              name="content"
-              onChange={handleTAChange}
-              className={`w-full h-full text-lg bg-transparent rounded-lg resize-none focus:outline-none ${styles.customScrollbar}`}
-              placeholder="Let your voice be heard..."
-            ></textarea>
-          </div>
-          <button
-            className={`${
-              showSend ? styles.visible : ""
-            } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 w-1/4 hover:bg-neutral hover:text-accent tarnsition-all duration-300 ease-in-out ${
-              styles.addButton
-            }`}
-            onClick={handleAddPost}
-          >
-            {loading ? (
-              <Loader />
-            ) : (
-              <>
-                <IoSend />
-                <p>Share</p>
-              </>
-            )}
-          </button>
+    <div className="h-screen w-screen bg-primary flex items-center text-base text-accent p-40 px-60 text-mono tracking-widest">
+      <div className="flex flex-col h-full w-full items-center justify-center">
+        <div className="flex items-center">
+          <input
+            value={newPost.title}
+            type="text"
+            name="title"
+            placeholder="Give it a title..."
+            className="h-12 w-72 p-4 bg-neutral rounded-lg focus-visible:outline-none"
+            onChange={handleInputChange}
+          />
+          <span className="text-3xl mx-2">.</span>
+          <p className="ml-2 text-lg">This story is about</p>
+          <Select
+            isMulti
+            options={categories}
+            className="ml-3 text-accent"
+            classNamePrefix="react-select"
+            styles={customStyles}
+            onChange={handleCategoryChange}
+          />
+          <span className="text-3xl mx-2">.</span>
         </div>
+        <div className="flex items-start justify-center w-full h-full my-8">
+          <textarea
+            value={newPost.content}
+            name="content"
+            onChange={handleTAChange}
+            className={`w-full h-full text-lg bg-transparent rounded-lg resize-none focus:outline-none ${styles.customScrollbar}`}
+            placeholder="Let your voice be heard..."
+          ></textarea>
+        </div>
+        <button
+          className={`${
+            showSend ? styles.visible : ""
+          } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 w-1/4 hover:bg-neutral hover:text-accent tarnsition-all duration-300 ease-in-out ${
+            styles.addButton
+          }`}
+          onClick={handleAddPost}
+        >
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              <IoSend />
+              <p>Share</p>
+            </>
+          )}
+        </button>
       </div>
-    </MainLayout>
+    </div>
   );
 }
