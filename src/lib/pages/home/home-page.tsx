@@ -121,7 +121,9 @@ const HomePage = () => {
             <Loader />
           </div>
         ) : error ? (
-          <div>{error}</div>
+          <div className="text-center text-accent col-span-3">{error}</div>
+        ) : posts.length === 0 ? (
+          <div className="text-center text-accent col-span-3">No stories found. Be the first to share a tale of perseverance.</div>
         ) : (
           posts.map((post) => <PostCard key={post.postID} post={post} />)
         )}
