@@ -7,16 +7,10 @@ import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 // pakai UserRegister (email, password, age, gender)
 export const registerUser = async (user: UserRegister) => {
 
-    if (!user.email || !user.password || !user.age || !user.gender) {
+    if (!user.email || !user.password || !user.gender) {
         return {
             success: false,
             message: 'All field is required.'
-        };
-    } 
-    else if (user.age < 15) {
-        return {
-            success: false,
-            message: 'Age must be more than 14'
         };
     } 
 
@@ -27,7 +21,6 @@ export const registerUser = async (user: UserRegister) => {
         await setDoc(doc(db, 'users', uid), {
             email: user.email,
             gender: user.gender,
-            age: user.age,
             role: "user"
         });
 

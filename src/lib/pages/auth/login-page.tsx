@@ -45,7 +45,7 @@ export default function LoginPage() {
     <div className="w-screen h-screen flex justify-center items-center bg-primary">
       <div className="w-full h-full flex justify-center lg:justify-between items-center px-8 py-8">
         <div className="w-96 lg:w-[50%] h-full justify-center items-center p-2 sm:p-10">
-          <div className="w-full h-full flex flex-col lg:pl-10 lg:pr-32 xl:pr-52 gap-3 justify-center text-white">
+          <div className="w-full h-full flex flex-col lg:pl-10 lg:pr-32 xl:pr-48 gap-3 justify-center text-white">
             <div className="text-2xl font-bold text-accent">Login</div>
             <div className="text-base text-gray-500">
               Hello! Enter your details to log in.

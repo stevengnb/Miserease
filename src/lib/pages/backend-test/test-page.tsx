@@ -1,4 +1,4 @@
-import { addPost, getOwnedPost, resolvePost } from "../../services/post-service";
+import { addPost, getOwnedPost, userEmpathizePost } from "../../services/post-service";
 import { loginUser, logoutUser, registerUser, updateUser } from "../../services/user-service";
 import { Post } from "../../types/post-type";
 import { UserLogin, UserRegister, UserUpdate } from "../../types/user-type";
@@ -7,7 +7,7 @@ const TestPage = () => {
     
     const handleRegister = async () => {
         const dummy : UserRegister = {
-            email: "reeynv11@gmail.com",
+            email: "stevengnb@gmail.com",
             password: "miserease",
             age: 20,
             gender: 'male'
@@ -56,8 +56,15 @@ const TestPage = () => {
         else console.log(response.data)
     }
 
+    const handleEmpathizePost = async() => {
+        const response = await userEmpathizePost("Wsg4DikzKLCNvAigWnRW")
+        console.log(response.message)
+    }
+
     return (
         <div>
+            <button onClick={handleRegister}>Register</button>
+            <br />
             <button onClick={handleLogin}>Login</button>
             <br />
             <button onClick={logoutUser}>Logout</button>
@@ -65,6 +72,8 @@ const TestPage = () => {
             <button onClick={handleAddPost}>Add post</button>
             <br />
             <button onClick={handleGetOwnedPost}>Get Owned Post</button>
+            <br />
+            <button onClick={handleEmpathizePost}>Empathize</button>
         </div>
     )
 }

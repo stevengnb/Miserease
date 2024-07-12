@@ -7,7 +7,7 @@ export interface Post {
     content?: string;
     resolved?: boolean;
     resolvedComment?: string | null;
-    emphatizeCount?: number;
+    empathizeCount?: number;
     archived?: boolean;
     banned?: boolean;
 }
