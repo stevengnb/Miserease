@@ -1,14 +1,70 @@
-import { resolvePost } from "../../services/post-service";
+import { addPost, getOwnedPost, resolvePost } from "../../services/post-service";
+import { loginUser, logoutUser, registerUser, updateUser } from "../../services/user-service";
+import { Post } from "../../types/post-type";
+import { UserLogin, UserRegister, UserUpdate } from "../../types/user-type";
 
 const TestPage = () => {
+    
+    const handleRegister = async () => {
+        const dummy : UserRegister = {
+            email: "reeynv11@gmail.com",
+            password: "miserease",
+            age: 20,
+            gender: 'male'
+        }
 
-    const handleTest = async () => {
-        
+        const response = await registerUser(dummy);
+        console.log(response.message)
+    }
+
+    const handleLogin = async () => {
+        const dummy : UserLogin = {
+            email: "reeynv11@gmail.com",
+            password: "miserease",
+        }
+
+        const response = await loginUser(dummy);
+        console.log(response.message)
+    }
+
+    const handleUpdateUser = async() => {
+        const dummy : UserUpdate = {
+            age: 18,
+            gender: 'male'
+        }
+
+        const response = await updateUser(dummy);
+        console.log(response.message)
+    }
+
+    const handleAddPost = async() => {
+        const dummy : Post = {
+            title: "Hackathon day 1 udah di contek :(",
+            content: "Pada jam 18.28 pada saat saya membahas dengan teman saya, ada orang yang lewat mencontek ide kita huhu",
+            category: ["work", "personal"]
+        }
+
+        const response = await addPost(dummy);
+        console.log(response.message)
+    }
+
+    const handleGetOwnedPost = async() => {
+        const response = await getOwnedPost();
+        if(!response.success){
+            console.log(response.message)
+        }
+        else console.log(response.data)
     }
 
     return (
         <div>
-            <button onClick={handleTest}>Test Feature</button>
+            <button onClick={handleLogin}>Login</button>
+            <br />
+            <button onClick={logoutUser}>Logout</button>
+            <br />
+            <button onClick={handleAddPost}>Add post</button>
+            <br />
+            <button onClick={handleGetOwnedPost}>Get Owned Post</button>
         </div>
     )
 }

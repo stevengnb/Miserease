@@ -53,8 +53,6 @@ export const addPost = async (post: Post) => {
     };
   }
 
-  console.log("Test");
-
   // get auto generated field
   const uid = user.uid;
   const postedDate = new Date(Date.now());
@@ -74,7 +72,7 @@ export const addPost = async (post: Post) => {
   };
 
   // exclude postID to get auto generated id from firebase
-  const { posterID, ...excludedPost } = post;
+  const { postID, ...excludedPost } = post;
 
   // add post to database
   try {
@@ -115,7 +113,7 @@ export const addOwnedPost = async (postID: string) => {
   const docRef = doc(db, "users", user.uid);
   try {
     await updateDoc(docRef, {
-      ownedPost: arrayUnion(...postID),
+      ownedPost: arrayUnion(...[postID]),
     });
 
     return {
@@ -210,7 +208,7 @@ export const reportPost = async (postID: string, reason: string) => {
         };
       } else {
         await updateDoc(reportedPostDoc.ref, {
-          reason: arrayUnion(...reason),
+          reason: arrayUnion(...[reason]),
         });
 
         return {
@@ -266,6 +264,30 @@ export const getAllPostByCategory = async(category: string) => {
     
 }
 
+export const getPostById = async(postID : string) => {
+    const postDocRef = doc(db, 'posts', postID);
+
+    try {
+        const postDoc = await getDoc(postDocRef);
+        if (postDoc.exists()) {
+            return {
+                success: "true",
+                data: postDoc as Post,
+            }
+        } else {
+            return {
+                success: false,
+                message: "Post not found"
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Error fetching post"
+        };
+    }
+}
+
 export const getAllPostByTitle = async (title: string) => {
     const postsCollection = collection(db, 'posts');
     const q = query(
@@ -284,47 +306,51 @@ export const getAllPostByTitle = async (title: string) => {
 };
 
 export const getOwnedPost = async () => {
-  const user = auth.currentUser;
-  if (!user) {
-    return {
-      success: false,
-      message: "User not found",
-    };
-  }
-
-  const docRef = doc(db, "users", user.uid);
-  try {
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists) {
-      return {
-        success: false,
-        message: "Error fetching user",
-      };
+    const user = auth.currentUser;
+        if (!user) {
+        return {
+            success: false,
+            message: "User not found",
+        };
     }
 
-    const ownedPostID: string[] = docSnap.data()?.ownedPost || [];
-    const posts: Post[] = [];
+    const docRef = doc(db, "users", user.uid);
+    try {
+        const docSnap = await getDoc(docRef);
 
-    for (const postID of ownedPostID) {
-      const postDocRef = doc(db, "posts", postID);
-      const postDoc = await getDoc(postDocRef);
+        if (!docSnap.exists) {
+            return {
+                success: false,
+                message: "Error fetching user 1",
+            };
+        }
 
-      if (postDoc.exists()) {
-        const postData = postDoc.data() as Post;
-        postData.postID = postDoc.id;
-        posts.push(postData);
-      } else {
-        console.warn(`Post with ID ${postID} not found`);
-      }
+        const ownedPostID: string[] = docSnap.data()?.ownedPost || [];
+        const posts: Post[] = [];
+
+        for (const postID of ownedPostID) {
+            const postDocRef = doc(db, "posts", postID);
+            const postDoc = await getDoc(postDocRef);
+
+            if (postDoc.exists()) {
+                const postData = postDoc.data() as Post;
+                postData.postID = postDoc.id;
+                posts.push(postData);
+            } else {
+                console.warn(`Post with ID ${postID} not found`);
+            }
+        }
+
+        return {
+            success: true,
+            message: "Success retrieve own posts",
+            data: posts
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Error fetching posts",
+        };
     }
-
-    return posts;
-  } catch (error) {
-    return {
-      success: false,
-      message: "Error fetching posts",
-    };
-  }
 };
 

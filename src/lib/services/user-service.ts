@@ -71,8 +71,6 @@ export const loginUser = async (user: UserLogin) => {
     }
 }
 
-
-
 export const getUserById = async(uid? : string) => {
     if(!uid){
         return {
@@ -102,10 +100,11 @@ export const getUserById = async(uid? : string) => {
 }
 
 export const updateUser = async (user: UserUpdate) => {
-    if(!user.uid) {
+    const userCheck = auth.currentUser;
+    if (!userCheck) {
         return {
-            success: false,
-            message: 'User ID Required.'
+        success: false,
+        message: "Not logged in",
         };
     }
     else if (!user.age || !user.gender) {
@@ -122,7 +121,7 @@ export const updateUser = async (user: UserUpdate) => {
     }
 
     try {
-        const docRef = doc(db, "users", user.uid);
+        const docRef = doc(db, "users", userCheck.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -133,12 +132,12 @@ export const updateUser = async (user: UserUpdate) => {
 
             return {
                 success: true,
-                message: `User ${user.uid} updated successfully!`
+                message: `User ${userCheck.uid} updated successfully!`
             };
         } else {
             return {
                 success: false,
-                message: `User not found. (${user.uid})`
+                message: `User not found. (${userCheck.uid})`
             };
         }
     } catch (err) {
