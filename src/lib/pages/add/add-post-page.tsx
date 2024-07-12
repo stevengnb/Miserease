@@ -144,7 +144,7 @@ export default function AddPost() {
         <button
           className={`${
             showSend ? styles.visible : ""
-          } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 w-1/4 hover:bg-neutral hover:text-accent tarnsition-all duration-300 ease-in-out ${
+          } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 w-1/4 hover:bg-neutral hover:text-accent transition-all duration-300 ease-in-out ${
             styles.addButton
           }`}
           onClick={handleAddPost}
