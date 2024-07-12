@@ -300,11 +300,7 @@ export const getAllPostByTitle = async (search: string) => {
             postedDate: doc.data().postedDate.toDate(),
         })) as Post[];
 
-        return {
-            success : false,
-            message: "Failed to search",
-            data : filteredPosts
-        };
+        return filteredPosts
     } catch (error) {
         return {
             success : false,

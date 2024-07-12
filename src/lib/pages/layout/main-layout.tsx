@@ -7,7 +7,7 @@ export default function MainLayout({children } : IChildren) {
   return (
     <div className='min-h-screen bg-primary'>
       <Navbar />
-      <div className='p-4'>
+      <div className='py-4 px-16'>
         {children}
       </div>
     </div>
