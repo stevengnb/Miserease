@@ -32,8 +32,8 @@ export default function AddPost() {
   const customStyles = {
     control: (provided: any, state: any) => ({
       ...provided,
-      backgroundColor: "#474973",
-      width: "350px",
+      backgroundColor: "#161b33",
+      width: "330px",
       minHeight: "48px",
       padding: "8px 3px",
       color: "#f1dac4",
@@ -46,7 +46,7 @@ export default function AddPost() {
     multiValue: (provided: any) => ({
       ...provided,
       backgroundColor: "#f8eadd",
-      color: "#f1dac4",
+      color: "#0d0c1d",
     }),
     option: (provided: any, state: any) => ({
       ...provided,
@@ -87,17 +87,17 @@ export default function AddPost() {
 
   const handleAddPost = async () => {
     setLoading(true);
-    // const response = await addPost(newPost);
+    const response = await addPost(newPost);
 
-    // if (response.success) {
-    //   setLoading(false);
-    //   toast.success(response.message);
-    //   navigate("/");
-    //   return;
-    // }
+    if (response.success) {
+      setLoading(false);
+      toast.success(response.message);
+      navigate("/");
+      return;
+    }
 
-    // setLoading(false);
-    // toast.error(response.message);
+    setLoading(false);
+    toast.error(response.message);
   };
 
   useEffect(() => {
@@ -109,43 +109,51 @@ export default function AddPost() {
   }, [newPost.content]);
 
   return (
-    <div className="h-screen w-screen bg-primary flex items-center text-base text-accent lg:p-28 lg:px-40 xl:p-40 xl:px-60 text-mono tracking-widest relative">
+    <div className="overflow-y-hidden overflow-x-hidden h-screen w-screen bg-primary flex items-center text-base text-accent pt-28 p-6 md:p-16 md:py-24 lg:p-28 lg:px-40 xl:p-40 xl:px-60 text-mono tracking-widest relative">
       <BackButton isFixed={true} />
       <div className="flex flex-col h-full w-full items-center justify-center">
-        <div className="flex items-center justify-center w-full">
-          <input
-            value={newPost.title}
-            type="text"
-            name="title"
-            placeholder="Give it a title..."
-            className="h-12 w-64 xl:w-72 p-4 bg-neutral rounded-lg focus-visible:outline-none"
-            onChange={handleInputChange}
-          />
-          <span className="text-3xl mx-2">.</span>
-          <p className="ml-2 text-base lg:text-base">This story is about</p>
-          <Select
-            isMulti
-            options={categories}
-            className="ml-3 text-accent"
-            classNamePrefix="react-select"
-            styles={customStyles}
-            onChange={handleCategoryChange}
-          />
-          <span className="text-3xl mx-2">.</span>
+        <div className="flex flex-col lg:flex-row items-start gap-3 lg:gap-0 lg:items-center justify-center w-full">
+          <div className="flex items-center justify-center">
+            <input
+              value={newPost.title}
+              type="text"
+              name="title"
+              placeholder="Give it a title..."
+              className="h-12 w-64 xl:w-72 p-4 bg-secondary rounded-lg focus-visible:outline-none"
+              onChange={handleInputChange}
+            />
+            <span className="text-3xl mx-2">.</span>
+          </div>
+          <div className="flex items-start md:items-center justify-center flex-col md:flex-row gap-2">
+            <p className="md:ml-2 text-base lg:text-base">
+              This story is about
+            </p>
+            <div className="flex items-center justify-start">
+              <Select
+                isMulti
+                options={categories}
+                className="md:ml-3 text-accent"
+                classNamePrefix="react-select"
+                styles={customStyles}
+                onChange={handleCategoryChange}
+              />
+              <span className="text-3xl mx-2">.</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-start justify-center w-full h-full my-8">
+        <div className="flex items-start justify-center w-full h-3/4 pt-8 md:pt-0 md:my-8">
           <textarea
             value={newPost.content}
             name="content"
             onChange={handleTAChange}
-            className={`w-full h-full xl:px-16 text-lg bg-transparent rounded-lg resize-none focus:outline-none ${styles.customScrollbar}`}
+            className={`w-full h-3/4 md:h-full xl:px-16 text-lg bg-transparent rounded-lg resize-none focus:outline-none ${styles.customScrollbar}`}
             placeholder="Let your voice be heard..."
           ></textarea>
         </div>
         <button
           className={`${
             showSend ? styles.visible : ""
-          } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 w-1/4 hover:bg-neutral hover:text-accent transition-all duration-300 ease-in-out ${
+          } flex justify-center items-center gap-2 tracking-wide rounded-3xl bg-accent text-neutral font-bold p-3 px-6 w-36 md:w-1/4 hover:bg-neutral hover:text-accent transition-all duration-300 ease-in-out ${
             styles.addButton
           }`}
           onClick={handleAddPost}
