@@ -6,8 +6,20 @@ import { loginUser } from "../../services/user-service";
 import Loader from "../../../components/loader";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Post } from "../../types/post-type";
+import AuthPostCard from "./auth-post-card";
 
 export default function LoginPage() {
+
+  const dummyPost: Post = {
+    postID: "1",
+    title: "I failed my exam so bad :(",
+    postedDate: new Date(),
+    content: "This is a sample post about React Context.",
+    resolvedComment: "",
+    emphatizeCount: 42,
+  };
+
   const navigate = useNavigate();
   const [userData, setUserData] = useState<UserLogin>({
     email: "",
@@ -87,7 +99,11 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
-        <div className="hidden lg:flex w-[50%] bg-gray-800 h-full rounded-lg"></div>
+        <div className="hidden lg:flex w-[50%] bg-gray-800 h-full rounded-lg justify-center items-center">
+            <div className="w-96">
+              <AuthPostCard post={dummyPost}/>
+            </div>
+        </div>
       </div>
     </div>
   );
