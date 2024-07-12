@@ -241,7 +241,7 @@ export const reportPost = async (postID: string, reason: string) => {
 
 }
 
-export const getAllPost = async (): Promise<Post[] | { success: false; message: string }> => {
+export const getAllPost = async () => {
     const postsCollection = collection(db, 'posts');
     const q = query(postsCollection, orderBy('postedDate', 'desc'));
 
@@ -261,7 +261,7 @@ export const getAllPost = async (): Promise<Post[] | { success: false; message: 
             message: "Error fetching posts",
         };
     }
-};
+}
 
 export const getOwnedPost = async () => {
     const user = auth.currentUser;
