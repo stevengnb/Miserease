@@ -19,9 +19,9 @@ export const router = [
   {
     path: "/home",
     element: (
-      // <ProtectedRoute>
+      <ProtectedRoute>
         <HomePage />
-      // </ProtectedRoute>
+      </ProtectedRoute>
     ),
   },
   {
@@ -30,10 +30,10 @@ export const router = [
   },
   {
     path: "/test",
-    element: <TestPage />
+    element: <TestPage />,
   },
   {
     path: "/post/:id",
-    element: <PostDetailPage />
-  }
+    element: <PostDetailPage />,
+  },
 ];
