@@ -3,7 +3,6 @@ import MainLayout from "../layout/main-layout";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../services/formatter-service";
 import { TbHeartHandshake } from "react-icons/tb";
-import BackButton from "../../../components/back-button";
 import {
   empathizePost,
   getPostById,
@@ -16,7 +15,6 @@ import { IoArrowBack } from "react-icons/io5";
 
 import { auth } from "../../../firebase/firebase-config";
 import { FaRegLightbulb } from "react-icons/fa";
-import { resolve } from "path";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
