@@ -5,6 +5,7 @@ import { UserLogin } from "../../types/user-type";
 import { loginUser } from "../../services/user-service";
 import Loader from "../../../components/loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -20,10 +21,16 @@ export default function LoginPage() {
 
     if (response.success) {
       setLoading(false);
+
+      toast.success(response.message)
       navigate("/");
+
+      return;
     }
 
     setLoading(false);
+
+    toast.error(response.message)
     console.log(response.message);
   };
 
