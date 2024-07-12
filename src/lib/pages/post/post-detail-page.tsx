@@ -17,6 +17,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { auth } from "../../../firebase/firebase-config";
 import { FaRegLightbulb } from "react-icons/fa";
 import styles from "../add/add-post-page.module.css";
+import { RiQuillPenLine } from "react-icons/ri";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -237,6 +238,9 @@ export default function PostDetailPage() {
           <div>Failed to retrieve post!</div>
         )}
       </div>
+      <FloatingButton navigateTo="add-post" isFixed={true} position="bottom-right">
+        <RiQuillPenLine className="w-8 h-8"/>
+      </FloatingButton>
     </MainLayout>
   );
 }
