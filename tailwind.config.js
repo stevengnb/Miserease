@@ -3,6 +3,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+        mono: ['"Roboto Mono"', 'monospace'],
+      },
       colors: {
         primary: {
           light: '#292838',

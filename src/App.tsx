@@ -24,7 +24,7 @@ function App() {
             },
           }}
         />
-        <div className="font-restart">
+        <div className="font-poppins">
           {/* <AuthContextProvider> */}
           <RouterComponent />
           {/* </AuthContextProvider> */}
