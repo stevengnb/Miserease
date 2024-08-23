@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../lib/services/user-service";
 import { IoMdExit } from "react-icons/io";
 import styles from "./navbar.module.css";
@@ -20,7 +20,7 @@ export default function Navbar() {
     <div className="text-2xl text-accent flex justify-center items-center">
       <div className="px-16 py-8 w-full flex justify-between">
         <div className="flex gap-8 items-center">
-          <div className="font-semibold">Miserease</div>
+          <Link className="font-semibold" to={"/home"}>Miserease</Link>
           <button
             onClick={handleNavigateToOwned}
             className={`bg-transparent text-accent font-medium text-base ${styles.navbarItem}`}
